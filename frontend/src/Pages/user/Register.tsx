@@ -1,3 +1,4 @@
+//frontend\src\Pages\user\Register.tsx
 import {useState } from 'react';
 import {useNavigate , Link} from 'react-router-dom';
 import { axiosInstance } from '../../api/axiosInstance';
@@ -21,13 +22,13 @@ const Register = () => {
           console.log(res , ': Registered user Data');
 
           if(res.data.message){
-            toast.success(res.data.message, {duration : 2000 , style : {color : '#fff' , background : 'black'}});
+            toast.success(res.data.message, {duration : 2000 , style : {color : '#ff0000' , background : 'black'}});
 
             setTimeout(() => {
               navigate('/login');
             }, 3000);
           } else if(res.data.error) {
-            toast.error(res.data.error , {duration : 2000 , style : {color : '#fff' , background : 'black'}});
+            toast.error(res.data.error , {duration : 2000 , style : {color : '#ff0000' , background : 'black'}});
           }
         }).catch(error => console.log(error , 'Axios register error')
         )

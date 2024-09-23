@@ -1,3 +1,4 @@
+//frontend\src\Pages\user\Login.tsx
 import {Link , useNavigate} from 'react-router-dom';
 import {useState} from 'react';
 import { axiosInstance } from '../../api/axiosInstance';
@@ -10,12 +11,14 @@ import { GoogleLogin ,GoogleOAuthProvider } from '@react-oauth/google';
 const Login = () => {
   const [email , setEmail] = useState<string>('');
   const [password , setPassword] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false); 
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSubmit = (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     axiosInstance.post('/auth/login' , {email , password}).then((res) => {
 
@@ -36,13 +39,31 @@ const Login = () => {
         setTimeout(() => {
           navigate('/feed');
         }, 3000);
+        } else if (res.data.otpRequired) {
+          // If OTP is required, navigate to the OTP Send page
+          toast('OTP required for login', {
+            duration: 2000,
+            style: { color: '#fff', background: 'black' },
+          });
+          setTimeout(() => {
+            navigate('/otp-send', { state: { email } });
+          }, 2000);
       }
 
       if(res.data.error){
         toast.error(res.data.error , {duration : 2000 , style : {color : '#fff' , background : 'black'}});
       }
-    }).then((error) => console.log(error ,'axios catch error while login')
-    )
+      })
+      .catch((error) => {
+        console.log(error, 'axios catch error while login');
+        toast.error('An error occurred. Please try again.', {
+          duration: 2000,
+          style: { color: '#fff', background: 'black' },
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return (
@@ -110,9 +131,10 @@ const Login = () => {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-light-blue-900 hover:bg-light-blue-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-violet-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 
-  display:block opacity-100 visible">
-                Login
+                  className="flex w-full justify-center rounded-md bg-light-blue-900 hover:bg-light-blue-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-violet-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  disabled={loading}
+                >
+                  {loading ? 'Logging in...' : 'Login'}
               </button>
             </div>
 
