@@ -81,7 +81,7 @@ z-index: 49;
     --color-white: 255 255 255;
 
   }
-  /* //15 23 42  21 30 49*/
+  /*//15 23 42  21 30 49*/
   [data-theme="dark"] {
      --color-bg: 12 12 12;
      --color-primary: 31 31 31;

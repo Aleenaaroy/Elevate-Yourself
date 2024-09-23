@@ -89,7 +89,7 @@ const PostCards : React.FC<PostCardProps> = ({posts , showAllposts, userData  , 
                   </Link>
                   <span className='text-ascent-2'>{post?.user?.headine}</span>
                 </div>
-                <span className='text-ascent-2'>{moment(post?.createdAt ?? '2023-09-24').fromNow()}</span>
+                <span className='text-ascent-2'>{moment(post?.createdAt ?? '2024-09-24').fromNow()}</span>
               </div>
             </div>
 

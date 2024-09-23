@@ -19,7 +19,7 @@ const Header = () => {
         <Typography
           className="mr-4 text-violet-900 cursor-pointer py-1.5 font-bold text-3xl"
         >
-          CareerUp
+          Elevate
         </Typography>
         {/* <div className="hidden lg:block">{navList}</div> */} 
         <div className="hidden gap-2 lg:flex">

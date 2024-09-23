@@ -59,7 +59,7 @@ const UserNav:React.FC<UserNavProps> = ({userData}) => {
     <div className='w-full flex flex-col md:flex-row items-center justify-between py-3 md:py-6 px-4 md:px-8 bg-primary dark:bg-[#0C134F]'>
       <NavLink to='/feed' className='flex gap-2 items-center'>
         <div className='p-1 md:p-2 text-[#065ad8] rounded font-extrabold  text-xl'>
-          <span className='dark:text-white'>CareerUp</span>
+          <span className='dark:text-white'>Elevate</span>
         </div>
       </NavLink>
 
