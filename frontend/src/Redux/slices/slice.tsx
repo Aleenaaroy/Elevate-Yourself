@@ -2,10 +2,10 @@ import { createSlice , PayloadAction  } from "@reduxjs/toolkit";
 
 //structure of user data
 export interface UserCred {
-    username : String,
-    useremail : String,
-    role : String , 
-    userId : String,
+    username : string,
+    useremail : string,
+    role : string , 
+    userId : string,
 }
 
 //structure of state 

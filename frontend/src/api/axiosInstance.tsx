@@ -1,12 +1,11 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export const axiosInstance = axios.create({
-    baseURL : 'http://localhost:8001/api/',
-
-
-    // headers : {
-    //     'authorization' : `Bearer ${localStorage.getItem('userToken')}`
-    // }
+    baseURL : 'http://localhost:8001/api',
+    headers: {
+        'Content-Type': 'application/json',  
+      }
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -19,13 +18,25 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
 })
 
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.data) {
+            const errorMessage = error.response.data.error || 'An error occurred';
+            // Show error toast with errorMessage
+            toast.error(errorMessage, { duration: 2000, style: { color: '#fff', background: 'black' } });
+        } else {
+            console.error('Axios error:', error);
+        }
+        return Promise.reject(error);
+    }
+)
 
 export const adminAxiosInstance = axios.create({
     baseURL : 'http://localhost:8001/admin' , 
-
-    // headers : {
-    //     'Authorization' : `Bearer ${localStorage.getItem('adminToken')}`
-    // }
+    headers: {
+        'Content-Type': 'application/json',  
+      }
     
 });
 
@@ -37,3 +48,17 @@ adminAxiosInstance.interceptors.request.use((config) => {
     }
     return config;
 })
+
+adminAxiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.data) {
+            const errorMessage = error.response.data.error || 'An error occurred';
+            // Show error toast with errorMessage
+            toast.error(errorMessage, { duration: 2000, style: { color: '#fff', background: 'black' } });
+        } else {
+            console.error('Axios error:', error);
+        }
+        return Promise.reject(error);
+    }
+)

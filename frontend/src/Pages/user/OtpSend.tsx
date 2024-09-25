@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
+import { toast ,Toaster } from 'react-hot-toast';
 import { axiosInstance } from '../../api/axiosInstance';
 
 const OtpSend: React.FC = () => {
@@ -21,7 +21,7 @@ const OtpSend: React.FC = () => {
 
       if (response.data.success) {
         toast.success('OTP sent successfully');
-        navigate('/otp-verify', { state: { contactInfo } });
+        navigate('/verify-otp', { state: { contactInfo } });
       } else {
         toast.error(response.data.message || 'Failed to send OTP');
       }
@@ -34,6 +34,8 @@ const OtpSend: React.FC = () => {
   };
 
   return (
+    <>
+    <Toaster position="top-right" />
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-2xl font-bold mb-4">Send OTP</h1>
       <form onSubmit={handleOtpSend} className="w-1/3">
@@ -60,6 +62,8 @@ const OtpSend: React.FC = () => {
         </button>
       </form>
     </div>
+  
+    </>
   );
 };
 

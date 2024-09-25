@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
+import { toast ,Toaster} from 'react-hot-toast';
 import { axiosInstance } from '../../api/axiosInstance';
 
 const OtpVerify: React.FC = () => {
@@ -14,7 +14,7 @@ const OtpVerify: React.FC = () => {
   const { contactInfo } = location.state || { contactInfo: null };
 
   if (!contactInfo) {
-    navigate('/otp-send');
+    navigate('/send-otp');
     return null;
   }
 
@@ -30,7 +30,7 @@ const OtpVerify: React.FC = () => {
 
       if (response.data.success) {
         toast.success('OTP verified successfully');
-        navigate('/dashboard'); // Redirect to dashboard or desired page
+        navigate('/feed'); // Redirect to dashboard or desired page
       } else {
         toast.error(response.data.message || 'Invalid OTP');
       }
@@ -43,6 +43,8 @@ const OtpVerify: React.FC = () => {
   };
 
   return (
+    <>
+    <Toaster position="top-right" />
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-2xl font-bold mb-4">Verify OTP</h1>
       <form onSubmit={handleOtpVerify} className="w-1/3">
@@ -69,6 +71,7 @@ const OtpVerify: React.FC = () => {
         </button>
       </form>
     </div>
+    </>
   );
 };
 

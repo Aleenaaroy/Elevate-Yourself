@@ -46,7 +46,7 @@ const Login = () => {
             style: { color: '#fff', background: 'black' },
           });
           setTimeout(() => {
-            navigate('/otp-send', { state: { email } });
+            navigate('/send-otp', { state: { email } });
           }, 2000);
       }
 
@@ -68,8 +68,8 @@ const Login = () => {
 
   return (
     <>
-    <GoogleOAuthProvider clientId='8989279973-hri4q1okjco23pch7n0mu8q0mp6ros97.apps.googleusercontent.com'>
-    <Toaster position='top-right'/>
+    <Toaster position="top-right" />
+    <GoogleOAuthProvider clientId='373518771897-t4pkgj95l32aukrvopa0k0mi01c1j1sk.apps.googleusercontent.com'>
     <div className=" border-solid flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
