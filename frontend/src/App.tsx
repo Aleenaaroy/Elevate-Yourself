@@ -17,7 +17,7 @@ const AppRoutes = () => {
   const routes = useRoutes([
     { path: "/", element: <Home /> },
     { path: "/register", element: <Auth isLogin={false}/>},
-    { path: "/login", element: <Auth isLogin={true}/> },
+    { path: "/login", element: <Auth isLogin={true}/>},
     { path: "/account", element: <Profile /> },
     { path: "/feed", element: <UserFeed /> },
     { path: "/details", element: <AddInfoPage /> },

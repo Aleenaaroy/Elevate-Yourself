@@ -1,3 +1,4 @@
+//backend\src\application\usecases\RegisterUser.ts
 import { User } from '../../domain/entities/User';
 import { IUserRepository } from '../../domain/repositories/IUserRepository';
 import bcrypt from 'bcrypt';

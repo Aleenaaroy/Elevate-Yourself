@@ -1,3 +1,4 @@
+//backend\src\infrastructure\models\UserModel.ts
 import mongoose, { Schema, Document } from 'mongoose';
 import { User } from '../../domain/entities/User';
 
