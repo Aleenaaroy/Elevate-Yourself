@@ -8,7 +8,7 @@ interface UserDocument extends Omit<User, 'id'>, Document {}
 const UserSchema: Schema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    role: { type: String, required: true, enum: ['Candidate', 'Company'] },
+    role: { type: String, required: true, default: 'User' },
     password: { type: String, required: true },
     isBlocked: { type: Boolean, default: false },
     location: String,

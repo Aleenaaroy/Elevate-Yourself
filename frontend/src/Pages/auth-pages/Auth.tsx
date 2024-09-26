@@ -216,7 +216,7 @@ const Auth: React.FC<AuthProps> = ({ isLogin }) => {
                   OR
                 </p>
 
-                <div className="flex justify-center items-center">
+                 <div className="flex justify-center items-center">
                   <GoogleLogin
                     onSuccess={(credRes) => {
                       if (!isLogin) {
@@ -276,12 +276,12 @@ const Auth: React.FC<AuthProps> = ({ isLogin }) => {
                     logo_alignment="center"
                     ux_mode="popup"
                   />
-                </div>
+                </div> 
               </form>
             </div>
           </div>
         </div>
-      </GoogleOAuthProvider>
+        </GoogleOAuthProvider>
     </>
   );
 };
