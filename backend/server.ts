@@ -1,17 +1,29 @@
 //backend\server.ts
-import mongoose from 'mongoose';
+import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
-import app from './app';
 dotenv.config();
 
+import { connectToDatabase } from "./src/infrastructure/config/dbConnection";
+import authRoutes from './src/infrastructure/routes/AuthRoutes';
 
+const app = express();
+
+const corsOptions = {
+    credentials: true,
+};
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// API Routes
+app.use('/api/auth', authRoutes);
+
+// Database connection
+connectToDatabase();
+
+// Server setup
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || '';
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-mongoose
-    .connect(MONGO_URI)
-    .then(() => {
-        console.log('Connected to MongoDB');
-        app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-    })
-    .catch((err) => console.log(err));
+export default app;

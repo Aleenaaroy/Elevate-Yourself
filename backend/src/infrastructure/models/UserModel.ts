@@ -42,9 +42,9 @@ const UserSchema: Schema = new Schema({
         }
     ],
 
-    // Add OTP fields to the schema
-    otp: { type: String }, // The OTP code
-    otpExpires: { type: Date } // OTP expiration time
+    otp: { type: String },
+    otpExpires: { type: Date },
+
 });
 
 // Export User model with UserDocument interface

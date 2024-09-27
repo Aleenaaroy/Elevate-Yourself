@@ -15,8 +15,9 @@ const CompanySchema: Schema = new Schema({
     profileImage: { type: String, default: 'https://cdn-icons-png.flaticon.com/512/6596/6596121.png' },
     companySize: Number,
     website: String,
-    otp: String,
-    otpExpires: Date,
+    otp: { type: String },
+    otpExpires: { type: Date },
+
 });
 
 export const CompanyModel = mongoose.model<CompanyDocument>('Company', CompanySchema);

@@ -2,6 +2,7 @@
 import { IUserRepository } from '../../domain/repositories/IUserRepository';
 import { UserModel } from '../../infrastructure/models/UserModel';
 import { User } from '../../domain/entities/User';
+import mongoose from 'mongoose';
 
 export class UserRepository implements IUserRepository {
     async createUser(user: User): Promise<User> {
@@ -11,11 +12,19 @@ export class UserRepository implements IUserRepository {
     }
 
     async findUserById(id: string): Promise<User | null> {
-        return UserModel.findById(id).lean();
+        const user = await UserModel.findById(id).lean();
+        if (user) {
+            return { ...user, id: (user._id as mongoose.Types.ObjectId).toString() }; // Casting _id to string
+        }
+        return null;
     }
 
     async findUserByEmail(email: string): Promise<User | null> {
-        return UserModel.findOne({ email }).lean();
+        const user = await UserModel.findOne({ email }).lean();
+        if (user) {
+            return { ...user, id: (user._id as mongoose.Types.ObjectId).toString() }; // Casting _id to string
+        }
+        return null;
     }
 
     async blockUser(userId: string): Promise<void> {

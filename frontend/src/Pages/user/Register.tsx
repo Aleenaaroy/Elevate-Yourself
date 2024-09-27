@@ -107,7 +107,7 @@ const Register = () => {
   return (
     <>
       <Toaster position="top-right" />
-      <GoogleOAuthProvider clientId='373518771897-t4pkgj95l32aukrvopa0k0mi01c1j1sk.apps.googleusercontent.com'>
+      <GoogleOAuthProvider clientId='373518771897-c2kov4q4nclad5j6976l8phab8vc4s7p.apps.googleusercontent.com'>
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <img

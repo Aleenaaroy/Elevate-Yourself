@@ -7,4 +7,6 @@ export interface ICompanyRepository {
     findCompanyByEmail(email: string): Promise<Company | null>;
     blockCompany(companyId: string): Promise<void>;
     unblockCompany(companyId: string): Promise<void>;
+    saveOtp(companyId: string, otp: string, otpExpires: Date): Promise<void>;
+    findByOtp(otp: string): Promise<Company | null>;
 }
