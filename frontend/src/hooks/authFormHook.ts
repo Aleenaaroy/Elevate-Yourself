@@ -1,7 +1,8 @@
+//frontend\src\hooks\authFormHook.ts
 import { useState } from "react"
 
 interface UserData {
-    username: string;
+    name: string;
     email: string;
     password: string;
     phone: string;
@@ -11,7 +12,7 @@ interface UserData {
 export const useAuthFormHook = () => {
 
     const [userData , setUserData] = useState<UserData>({
-        username:'',
+        name:'',
         email: '',
         password: '',
         phone: '',

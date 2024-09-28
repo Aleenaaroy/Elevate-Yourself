@@ -1,7 +1,6 @@
+//frontend\src\App.tsx
 import { useRoutes } from "react-router-dom";
 import Home from "./Pages/intro/Home";
-//import Register from "./Pages/user/Register";
-//import Login from "./Pages/user/Login";
 import Profile from "./Pages/user/Profile";
 import UserFeed from "./Pages/user/UserFeed";
 

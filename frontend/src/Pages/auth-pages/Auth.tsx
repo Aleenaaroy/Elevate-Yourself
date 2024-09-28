@@ -1,3 +1,4 @@
+//frontend\src\Pages\auth-pages\Auth.tsx
 import React from "react";
 import InputAuth from "../../Components/user/fields/InputAuth";
 import { Link, useNavigate } from "react-router-dom";
@@ -156,9 +157,9 @@ const Auth: React.FC<AuthProps> = ({ isLogin }) => {
                 ) : (
                   <>
                     <InputAuth
-                      labelName="username"
-                      name="username"
-                      value={userData.username}
+                      labelName="name"
+                      name="name"
+                      value={userData.name}
                       onChange={handleChangeData}
                       placeholder="John Doe"
                       type="text"

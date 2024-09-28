@@ -1,73 +1,102 @@
-import React , {useState , lazy , Suspense , useEffect} from 'react';
+//frontend\src\Pages\user\UserFeed.tsx
+import  {useState , lazy , Suspense , useEffect} from 'react';
 import { useSelector } from 'react-redux';
 import RootState from '../../Redux/rootstate/rootState';
 import { axiosInstance } from '../../api/axiosInstance';
-import UserNav from '../../Components/user/Nav/UserNav'
-import ProfileCard from '../../Components/user/Profile/ProfileCard'
-import ConnectionCard from '../../Components/user/cards/ConnectionCard'
-import PostCards from '../../Components/user/postss/PostCards'
+import UserNav from '../../Components/user/Nav/UserNav';
+import ProfileCard from '../../Components/user/Profile/ProfileCard';
+import ConnectionCard from '../../Components/user/cards/ConnectionCard';
+import PostCards from '../../Components/user/postss/PostCards';
 import { Spinner } from '@material-tailwind/react';
 import CreatePost from '../../Components/user/postss/CreatePost';
 const EditProfile = lazy(() => import('../../Components/user/modal/edit-user/EditProfile'));
 
+// Define interfaces for user data and posts
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  // Add other user properties as needed
+}
+
+interface Post {
+  id: string;
+  content: string;
+  author: UserData;
+  createdAt: Date;
+  // Add other post properties as needed
+}
 
 const UserFeed = () => {
-    const [userData , setUserData]  = useState<any>([]);
-    const [posts , setPosts] = useState<any>([])
-    const [updateUI , setUpdateUI] = useState<boolean>(false);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [updateUI, setUpdateUI] = useState<boolean>(false);
 
       //modals
   const [showModal , setShowModal] = useState<boolean>(false);
 
   const openEditModal = () => {
     setShowModal(true);
-  }
+  };
 
   const closeEditModal = () => {
     setShowModal(false);
-  }
+  };
 
     const user = useSelector((state : RootState) => state.user.userCred);
 
-    useEffect(() => {
-      axiosInstance.get(`/profile/${user?.userId}`).then((res) => {
-      
-        if(res.data){
-          setUserData(res.data.user);
+  useEffect(() => {
+    axiosInstance
+      .get(`/profile/${user?.userId}`)
+      .then((res) => {
+        if (res.data) {
+          setUserData(res.data.user as UserData);
         }
-      }).catch((error) => console.log(error , 'axios')
-      )
+      })
+      .catch((error) => console.log(error, 'axios'));
 
-      axiosInstance.get('/getposts').then((res) => {
-        if(res.data.message){
-          setPosts(res.data.posts);
+    axiosInstance
+      .get('/getposts')
+      .then((res) => {
+        if (res.data.message) {
+          setPosts(res.data.posts as Post[]);
         }
-      }).catch((err) => console.log(err, 'axios posts err')
-      )
-    }, [user?.userId , updateUI]);
+      })
+      .catch((err) => console.log(err, 'axios posts err'));
+  }, [user?.userId, updateUI]);
 
   // Function to add a new post to the 'posts' state
-  const addNewPost = (newPost : any) => {
+  const addNewPost = (newPost: Post) => {
     setPosts([...posts, newPost]);
   };
   return (
     <>
-        <div className='home w-full px-0 lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-hidden'>
-            <UserNav userData={userData} />
+      <div className="home w-full px-0 lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-hidden">
+        {userData && <UserNav userData={userData} />}
 
-            <div className='w-full flex gap-2 lg:gap-4 pt-5 pb-10 h-full'>
+        <div className="w-full flex gap-2 lg:gap-4 pt-5 pb-10 h-full">
+          {/* Left-side */}
+          <div className="w-1/3 lg:w-1/4 h-full md:flex flex-col gap-6 overflow-y-auto">
+            {userData && (
+              <ProfileCard userData={userData} openEditModal={openEditModal} />
+            )}
+            <ConnectionCard />
+          </div>
 
-                {/* left-side */}
-                <div className='w-1/3 lg:w-1/4 h-full md:flex flex-col gap-6 overflow-y-auto'>
-                    <ProfileCard userData={userData} openEditModal={openEditModal} />
-                    <ConnectionCard />
-                </div>
-
-                {/* center */}   
-                <div className='flex-1 bg-bgColor pt-5 pb-10 flex flex-col gap-6 overflow-y-auto'>
-                    <CreatePost  userData={userData} addNewPost={addNewPost} />
-                    <PostCards  userData={userData} posts={posts} setUpdateUI={setUpdateUI} showAllposts={true} />
-                </div>
+          {/* Center */}
+          <div className="flex-1 bg-bgColor pt-5 pb-10 flex flex-col gap-6 overflow-y-auto">
+            {userData && (
+              <CreatePost userData={userData} addNewPost={addNewPost} />
+            )}
+            <PostCards
+              userData={userData}
+              posts={posts}
+              setUpdateUI={setUpdateUI}
+              showAllposts={true}
+            />
+          </div>
 
                 {/* right-side */}
                 <div className='w-1/4 h-full lg:flex flex-col gap-8 overflow-y-auto'>
@@ -99,11 +128,11 @@ const UserFeed = () => {
             </div>
         </div>
 
-        <Suspense fallback={<Spinner />}>
-            <EditProfile userData={userData} visible={showModal} closeEditModal={closeEditModal} />
+        <Suspense fallback={<Spinner className="h-8 w-8 text-blue-500" />}>
+          <EditProfile userData={userData} visible={showModal} closeEditModal={closeEditModal} />
         </Suspense>
     </>
-  )
-}
+  );
+};
 
-export default UserFeed
+export default UserFeed;

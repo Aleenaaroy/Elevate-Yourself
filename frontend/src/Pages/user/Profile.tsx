@@ -1,3 +1,4 @@
+//frontend\src\Pages\user\Profile.tsx
 import {useState , useEffect , lazy , Suspense  } from 'react';
 import { Spinner } from '@material-tailwind/react';
 import { useSelector } from 'react-redux';
@@ -189,7 +190,7 @@ const Profile = () => {
               <div className="hidden w-1/4 h-full lg:flex flex-col gap-8 overflow-y-auto">
                 <div className="w-full bg-primary shadow-sm rounded-lg px-6 py-5">
                   <div className="flex items-center justify-between text-lg text-ascent-1 pb-2 border-b border-[#66666645]">
-                    <span>Jobs By {user?.username}</span>
+                    <span>Jobs By {user?.name}</span>
                   </div>
                   <div className="w-full flex flex-col gap-4 pt-4">
                     <div className="flex items-center justify-between">

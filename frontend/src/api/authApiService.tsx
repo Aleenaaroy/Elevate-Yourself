@@ -1,8 +1,9 @@
+//frontend\src\api\authApiService.tsx
 import { axiosInstance } from "./axiosInstance";
 import { AxiosError } from 'axios';
 
 interface UserData {
-    username: string;
+    name: string;
     email: string;
     password: string;
     phone: string;

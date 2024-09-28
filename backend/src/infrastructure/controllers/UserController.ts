@@ -35,7 +35,7 @@ export const register = async (req: Request, res: Response) => {
         }
 
         const user = await registerUserUseCase.execute(req.body);
-        res.status(201).json({ message: 'Registration successful, please log in.', redirect: '/login' });
+        res.status(201).json({ message: 'Proceed for Otp Verification', redirect: '/verify-otp' });
     } catch (error) {
         if (error instanceof Error) {
             res.status(400).json({ message: error.message });
@@ -159,8 +159,8 @@ export const googleLogin = async (req: Request, res: Response, next: NextFunctio
                 message: 'Login Successful',
                 token: userToken,
                 userData: {
-                    username: user.name,
-                    useremail: user.email,
+                    name: user.name,
+                    email: user.email,
                     role: user.role,
                     userId: user.id,
                     profileImage,
