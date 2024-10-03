@@ -3,20 +3,21 @@ import { useRoutes } from "react-router-dom";
 import Home from "./Pages/intro/Home";
 import Profile from "./Pages/user/Profile";
 import UserFeed from "./Pages/user/UserFeed";
-
+import Register from "./Pages/user/Register";
+import Login from "./Pages/user/Login";
 import Adminlogin from "./Pages/admin/Adminlogin";
 import UsersList from "./Pages/admin/UsersList";
 import CompanyList from "./Pages/admin/CompanyList";
 
 import AddInfoPage from "./Pages/user/AddInfoPage";
 import SavedPosts from "./Pages/user/SavedPosts";
-import Auth from './Pages/auth-pages/Auth';
+//import Auth from './Pages/auth-pages/Auth';
 
 const AppRoutes = () => {
   const routes = useRoutes([
     { path: "/", element: <Home /> },
-    { path: "/register", element: <Auth isLogin={false}/>},
-    { path: "/login", element: <Auth isLogin={true}/>},
+    { path: "/register", element: <Register/>},
+    { path: "/login", element: <Login/>},
     { path: "/account", element: <Profile /> },
     { path: "/feed", element: <UserFeed /> },
     { path: "/details", element: <AddInfoPage /> },

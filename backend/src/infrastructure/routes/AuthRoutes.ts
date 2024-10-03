@@ -9,9 +9,9 @@ import { getCandidateData, getCompanyData } from '../controllers/RoleBasedContro
 const router = express.Router();
 
 router.post('/register', register);
-router.post('/login', login);
 router.post('/send-otp', sendOtp);
 router.post('/verify-otp', verifyOtp);
+router.post('/login', login);
 router.post('/google', googleSignup);
 router.post('/google/login' , googleLogin);
 

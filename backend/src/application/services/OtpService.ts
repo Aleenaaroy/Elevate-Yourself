@@ -47,9 +47,7 @@ export class OtpService {
     }
 
     public async sendOtp(email: string): Promise<string> {
-        const otp = crypto.randomBytes(3).toString('hex').toUpperCase(); // Generate 6-character OTP
-
-        // Save OTP in the user's record (you can save it in a separate field or collection)
+        const otp = crypto.randomBytes(3).toString('hex').toUpperCase(); 
         const user = await this.userRepository.findUserByEmail(email);
         
         if (!user) {

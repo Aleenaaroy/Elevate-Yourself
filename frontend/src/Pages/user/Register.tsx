@@ -17,29 +17,21 @@ const Register = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    axiosInstance
-      .post("/auth/register", { name, email, role, password })
-      .then((res) => {
-        console.log(res, ": Registered user Data");
+        axiosInstance.post('/auth/register' , {name , email , role , password}).then((res) => {
+          console.log(res , ': Registered user Data');
 
-        if (res.data.message) {
-          toast.success(res.data.message, {
-            duration: 2000,
-            style: { color: "#ff0000", background: "black" },
-          });
+          if(res.data.message){
+            toast.success(res.data.message, {duration : 2000 , style : {color : '#fff' , background : 'black'}});
 
-          setTimeout(() => {
-            navigate("/login");
-          }, 3000);
-        } else if (res.data.error) {
-          toast.error(res.data.error, {
-            duration: 2000,
-            style: { color: "#ff0000", background: "black" },
-          });
-        }
-      })
-      .catch((error) => console.log(error, "Axios register error"));
-  };
+            setTimeout(() => {
+              navigate('/login');
+            }, 3000);
+          } else if(res.data.error) {
+            toast.error(res.data.error , {duration : 2000 , style : {color : '#fff' , background : 'black'}});
+          }
+        }).catch(error => console.log(error , 'Axios register error')
+        )
+    }
 
   const checkPasswordstrength = (password: string) => {
     const passwordRequirements = {
@@ -62,39 +54,30 @@ const Register = () => {
       strength++;
     }
 
-    if (
-      passwordRequirements.requireUpperCase &&
-      uppercaseRegex.test(password)
-    ) {
+    if(passwordRequirements.requireUpperCase && uppercaseRegex.test(password)){
       strength++;
     }
 
-    if (
-      passwordRequirements.requireLowerCase &&
-      lowercaseRegex.test(password)
-    ) {
-      strength++;
+    if(passwordRequirements.requireLowerCase && lowercaseRegex.test(password)){
+      strength ++;
     }
 
     if (passwordRequirements.requireNumbers && numbersRegex.test(password)) {
       strength++;
     }
 
-    if (
-      passwordRequirements.requireSpecialChars &&
-      specialCharRegex.test(password)
-    ) {
-      strength++;
+    if(passwordRequirements.requireSpecialChars && specialCharRegex.test(password)){
+      strength ++;
     }
 
     if (strength === 0) {
-      return "Weak";
+      return 'Weak';
     } else if (strength < 4) {
-      return "Moderate";
+      return 'Moderate';
     } else {
-      return "Strong";
+      return 'Strong';
     }
-  };
+  }
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
@@ -102,7 +85,7 @@ const Register = () => {
 
     const strength = checkPasswordstrength(newPassword);
     SetPasswordstrength(strength);
-  };
+  }
 
   return (
     <>
@@ -187,13 +170,11 @@ const Register = () => {
                 </div>
               </div>
 
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
+            <div>
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                   Password
-                </label>
+                </label></div>
                 <div className="mt-2">
                   <input
                     id="password"
@@ -208,9 +189,9 @@ const Register = () => {
                   {passwordStrength && (
                     <div
                       className={`text-sm mt-2 ${
-                        passwordStrength === "Strong"
-                          ? "text-green-500"
-                          : "text-red-500"
+                        passwordStrength === 'Strong'
+                          ? 'text-green-500'
+                          : 'text-red-500'
                       }`}
                     >
                       Password Strength: {passwordStrength}
