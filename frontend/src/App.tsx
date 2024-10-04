@@ -1,41 +1,48 @@
-//frontend\src\App.tsx
-import { useRoutes } from "react-router-dom";
-import Home from "./Pages/intro/Home";
-import Profile from "./Pages/user/Profile";
-import UserFeed from "./Pages/user/UserFeed";
-import Register from "./Pages/user/Register";
-import Login from "./Pages/user/Login";
-import Adminlogin from "./Pages/admin/Adminlogin";
-import UsersList from "./Pages/admin/UsersList";
-import CompanyList from "./Pages/admin/CompanyList";
+import {Routes , Route} from 'react-router-dom';
+import Home from './Pages/intro/Home';
+import Profile from './Pages/user/Profile';
+import UserFeed from './Pages/user/UserFeed';
+import Adminlogin from './Pages/admin/Adminlogin';
+import UsersList from './Pages/admin/UsersList';
+import CompanyList from './Pages/admin/CompanyList';
+import PrivatePages from './Components/PrivatePages';
+import CategoryAdd from './Pages/admin/CategoryAdd';
+import NotFound from './Pages/intro/NotFound';
+import { Toaster } from 'react-hot-toast';
+import Auth from './Pages/auth-pages/Auth';
 
-import AddInfoPage from "./Pages/user/AddInfoPage";
-import SavedPosts from "./Pages/user/SavedPosts";
-//import Auth from './Pages/auth-pages/Auth';
 
-const AppRoutes = () => {
-  const routes = useRoutes([
-    { path: "/", element: <Home /> },
-    { path: "/register", element: <Register/>},
-    { path: "/login", element: <Login/>},
-    { path: "/account", element: <Profile /> },
-    { path: "/feed", element: <UserFeed /> },
-    { path: "/details", element: <AddInfoPage /> },
-    { path: "/details/:id", element: <AddInfoPage /> },
-    { path: "/saved", element: <SavedPosts /> },
-    { path: "/admin", element: <Adminlogin /> },
-    { path: "/admin/users", element: <UsersList /> },
-    { path: "/admin/companies", element: <CompanyList /> },
-  ]);
+function App() {
 
-  return routes;
-};
-const App = () => {
+
   return (
-    <div>
-      <AppRoutes />
-    </div>
-  );
-};
+    <>
+      <Routes>
+        <Route index path='/' element={<Home/>} />
+        <Route path='/login' element={<Auth isLogin={true}/>}/>
+        <Route path='/register' element={<Auth isLogin={false}/>}/>
 
-export default App;
+       <Route element={<PrivatePages isUser={true}/>}>
+          <Route path='/account' element={<Profile/>} />
+          <Route path='/account/:id' element={<Profile/>} />
+          <Route path='/feed' element={<UserFeed />} />
+        
+        </Route>
+
+        <Route path='/admin' element={<Adminlogin/>}/>
+        
+        <Route element={<PrivatePages isUser={false}/>}>
+          <Route path='/admin/users' element={<UsersList/>} />
+          <Route path='/admin/companies' element={<CompanyList/>} />
+          <Route path='/admin/categories' element={<CategoryAdd />}/>
+          
+        </Route>
+
+        <Route path='*' element={<NotFound/>}/>
+      </Routes>
+      <Toaster position='top-right'/>
+    </>
+  )
+}
+
+export default App

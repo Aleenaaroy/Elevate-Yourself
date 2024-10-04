@@ -1,4 +1,4 @@
-//frontend\src\utils\authFormValidate.ts
+
 interface UserData {
     name: string;
     email: string;
@@ -12,30 +12,25 @@ export const validateCreds = (userData: UserData , forRegister: boolean) => {
     let result = true;
     let message = '';
 
-  if (forRegister) {
-    if (
-      userData.name.trim() === '' ||
-      userData.password.trim() === '' ||
-      userData.phone.trim() === ''
-    ) {
-      result = false;
-      message = 'Invalid Entries';
-    }
-  } else {
-    if (
-      userData.email.trim() === '' ||
-      userData.password.trim() === ''
-    ) {
-      result = false;
-      message = 'Invalid Entries';
-    }
-  }
+    if(forRegister) {
 
-  return {
-    result,
-    message,
-  };
-};
+        if(userData.name.trim() === '' || userData.password.trim() === '' || userData.phone.trim() === '') {
+            result = false;
+            message = 'Invalid Entries'
+        }
+    } else {
+
+        if(userData.email.trim() === '' || userData.password.trim() === '') {
+            result = false;
+            message = 'Invalid Entries'
+        }
+    }
+
+    return {
+        result,
+        message
+    }
+}
 
 
 export const validatePassword = (password: string) => {
@@ -44,7 +39,7 @@ export const validatePassword = (password: string) => {
         hasUpperCase: /[A-Z]/.test(password),
         hasLowerCase: /[a-z]/.test(password),
         hasNumber: /\d/.test(password),
-        hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+        hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password)
     };
 
     const isStrong = 
@@ -55,4 +50,4 @@ export const validatePassword = (password: string) => {
     passwordNeeds.hasSpecialChar;
 
     return isStrong;
-};
+}

@@ -1,12 +1,9 @@
-//frontend\src\api\axiosInstance.tsx
 import axios from "axios";
 import toast from "react-hot-toast";
 
 export const axiosInstance = axios.create({
-    baseURL : 'http://localhost:8001/api',
-    headers: {
-        'Content-Type': 'application/json',  
-      }
+   
+    baseURL : 'http://localhost:8001/api'
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -33,12 +30,12 @@ axiosInstance.interceptors.response.use(
     }
 )
 
+
+
 export const adminAxiosInstance = axios.create({
-    baseURL : 'http://localhost:8001/admin' , 
-    headers: {
-        'Content-Type': 'application/json',  
-      }
-    
+     
+    baseURL : 'http://localhost:8001/admin'
+
 });
 
 adminAxiosInstance.interceptors.request.use((config) => {

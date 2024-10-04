@@ -1,24 +1,21 @@
 //backend\src\infrastructure\routes\AuthRoutes.ts
 import express from 'express';
-import { register, login,sendOtp, verifyOtp ,googleSignup ,googleLogin} from '../controllers/UserController';
-import { getProtectedData } from '../controllers/ProtectedController';
-import { authMiddleware } from '../middlewares/authMiddleware';
-import { roleMiddleware } from '../middlewares/roleMiddleware';
-import { getCandidateData, getCompanyData } from '../controllers/RoleBasedController';
+import { AuthController } from '../controllers/AuthController';
+import { UserRepository } from '../../domain/repositories/UserRepository'; 
+import { CompanyRepository } from '../../domain/repositories/CompanyRepository'; 
 
 const router = express.Router();
 
-router.post('/register', register);
-router.post('/send-otp', sendOtp);
-router.post('/verify-otp', verifyOtp);
-router.post('/login', login);
-router.post('/google', googleSignup);
-router.post('/google/login' , googleLogin);
+const userRepo = new UserRepository(); 
+const companyRepo = new CompanyRepository();  
 
+const authController = new AuthController(userRepo, companyRepo);
 
-router.get('/protected', authMiddleware, getProtectedData);
-router.get('/candidate-data', authMiddleware, roleMiddleware('Candidate'), getCandidateData);
-router.get('/company-data', authMiddleware, roleMiddleware('Company'), getCompanyData);
-
+router.post('/register', (req, res, next) => authController.register(req, res, next));
+router.post('/otpregister', (req, res, next) => authController.otpRegister(req, res, next));
+router.post('/resend', (req, res, next) => authController.register(req, res, next)); 
+router.post('/login', (req, res, next) => authController.login(req, res, next));
+router.post('/google', (req, res, next) => authController.googleSignup(req, res, next));
+router.post('/google/login', (req, res, next) => authController.googleLogin(req, res, next));
 
 export default router;

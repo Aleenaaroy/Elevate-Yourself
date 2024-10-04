@@ -1,5 +1,5 @@
 //backend\src\application\services\AuthService.ts
-import { IUserRepository } from '../../domain/repositories/IUserRepository';
+import { IUserRepository } from '../../domain/repositories/interfaces/IUserRepository';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 

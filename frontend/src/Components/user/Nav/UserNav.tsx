@@ -1,51 +1,52 @@
 import React , {useEffect , useState , lazy , Suspense} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
-import ThemeRootState from '../../../Redux/rootstate/themeRootstate';
-import {BsMoon , BsSunFill} from 'react-icons/bs';
 import {IoMdNotificationsOutline} from 'react-icons/io';
+import {BsBriefcaseFill , BsChatSquareTextFill} from 'react-icons/bs';
+import {GiWireframeGlobe} from 'react-icons/gi';
 import {ImHome} from 'react-icons/im';
-import {SetThemepayload , setTheme } from '../../../Redux/slices/theme';
 import { logout } from '../../../Redux/slices/slice';
 import toast from 'react-hot-toast';
 const LazyProfileDropDown = lazy(() => import('../../../Pages/user/ProfileDropDown'));
 import { Spinner } from '@material-tailwind/react';
+import { axiosInstance } from '../../../api/axiosInstance';
+import RootState from '../../../Redux/rootstate/rootState';
 
 interface UserNavProps {
-  userData : any;
+
 }
 
 
-const UserNav:React.FC<UserNavProps> = ({userData}) => {
-  const {theme} = useSelector((state : ThemeRootState) => state.theme);
+const UserNav:React.FC<UserNavProps> = () => {
+
+  const user = useSelector((state : RootState) => state.user.userCred);
+  const [userData , setUserData] = useState<any>([]);
 
   const [openDropProfile , setOpenDropProfile] = useState<boolean>(false);
-
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (theme === 'dark') {
-      document.body.classList.add('dark');    
-    } else {
-      document.body.classList.remove('dark');
-    }
-  }, [theme]);
+    axiosInstance.get(`/ownProfile`).then((res) => {
+      
+      if(res.data){
+        setUserData(res.data.user);
+      }
+    }).catch((error) => console.log(error , 'axios')
+    )
+  },[]);
+
+  const token = localStorage.getItem('userToken');
+
 
   useEffect(() => {
-    const token = localStorage.getItem('userToken');
-    if(token){
-      console.log('token here' ,token);
-    } else {
+
+    if(!token){
       navigate('/login');
     }
-  }, []);
+  }, [])
 
-  const handleTheme = () => {
-    const themeValue = theme === 'light' ? 'dark' : 'light';
-    dispatch(setTheme({ theme: themeValue } as SetThemepayload));
-  };     
 
   const handleLogout = () => {
     dispatch(logout());
@@ -54,34 +55,52 @@ const UserNav:React.FC<UserNavProps> = ({userData}) => {
 
     toast.success('Logout Successfully');
   }
-     
+
   return (
-    <div className='w-full flex flex-col md:flex-row items-center justify-between py-3 md:py-6 px-4 md:px-8 bg-primary dark:bg-[#0C134F]'>
+    <div className='w-full flex flex-col md:flex-row items-center justify-between py-3 md:py-6 px-4 md:px-8 bg-primary ]'>
       <NavLink to='/feed' className='flex gap-2 items-center'>
-        <div className='p-1 md:p-2 text-[#065ad8] rounded font-extrabold  text-xl'>
+        <div className='p-1 md:p-2 text-[#065ad8] rounded font-extrabold  text-3xl'>
           <span className='dark:text-white'>Elevate</span>
         </div>
       </NavLink>
+      <div className='flex gap-3 md:gap-14 items-center text-ascent-1 text-md md:text-xl cursor-pointer'>
+            <NavLink to='/feed' className={`hover:scale-125 ${window.location.pathname === '/feed' ? 'bg-gradient-to-tl from-[#9facfc] to-[#e9eaec] rounded-full p-3' : ''}`}>
+              <ImHome />
+            </NavLink>
 
-      {/* Icons */}
-      <div className='flex gap-3 md:gap-14 items-center text-ascent-1 text-md md:text-xl'>
-            <NavLink to='/feed'>
-                <ImHome className='hover:scale-125 dark:text-white' />
+            <NavLink to={`/explore`} className={`hover:scale-125 ${window.location.pathname === '/explore' ? 'bg-gradient-to-tl from-[#9facfc] to-[#e9eaec] rounded-full p-3' : ''}`}>
+              <GiWireframeGlobe />
             </NavLink>
           
-          <button onClick={() => handleTheme()} >
-            {theme === 'light' ? <BsMoon className='hover:scale-125'/> : <BsSunFill className='hover:scale-125 dark:text-white' /> }
-          </button>
-            <IoMdNotificationsOutline className='hover:scale-125 dark:text-white' />
+            <NavLink to='/jobs' className={`hover:scale-125 ${window.location.pathname === '/jobs' ? 'bg-gradient-to-tl from-[#9facfc] to-[#e9eaec] rounded-full p-3' : ''}`}>
+              <BsBriefcaseFill />
+            </NavLink>
 
+            {user?.role === 'Candidate' && (
+              <NavLink to='/message' className={`hover:scale-125 ${window.location.pathname === '/message' ? 'bg-gradient-to-tl from-[#9facfc] to-[#e9eaec] rounded-full p-3' : ''}`} >
+                <BsChatSquareTextFill/>
+              </NavLink>
+            )}
+
+           
+              <NavLink to="/notifications" className={`hover:scale-125 ${window.location.pathname === '/notifications' ? 'bg-gradient-to-tl from-[#9facfc] to-[#e9eaec] rounded-full p-3' : ''}`}>
+                <IoMdNotificationsOutline  />
+               
+              </NavLink>
+           
+          
           <span onClick={() => setOpenDropProfile((prev) => !prev)}>
-          {/* <CgProfile className='hover:scale-125' /> */}
-          <img src={userData?.profileImage} alt='' className='w-6 h-6 md:w-8 md:h-8 rounded-full object-cover hover:scale-125' />
+            {userData?.profileImage ? (
+              <img src={userData?.profileImage} alt='' className={`w-6 h-6 md:w-8 md:h-8 rounded-full object-cover hover:scale-125 `} />
+            ) : (
+              <img src={`https://cdn-icons-png.flaticon.com/512/3177/3177440.png`} alt="" className='w-6 h-6 md:w-8 md:h-8 rounded-full object-cover hover:scale-125' />
+            )}
           </span>
+
             {
               openDropProfile && (
               <Suspense fallback={<div><Spinner/></div>}>
-              <LazyProfileDropDown userData={userData} />
+                <LazyProfileDropDown userData={userData} />
               </Suspense>
               )
             }

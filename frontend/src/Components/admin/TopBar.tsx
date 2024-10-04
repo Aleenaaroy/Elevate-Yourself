@@ -1,11 +1,14 @@
-import {useState , useEffect} from 'react';
+import {useState } from 'react';
 import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { adminSignOut } from '../../Redux/slices/adminSlice';
 
 const TopBar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -13,6 +16,7 @@ const TopBar = () => {
 
 
     const handleLogout = () => {
+        dispatch(adminSignOut());
         navigate('/admin');
 
         toast.success('Logout successfully', {duration : 4000 , style : {color : '#fff' , background : 'black'}});
@@ -48,9 +52,9 @@ const TopBar = () => {
                     </button>
 
                     <div className={`w-full lg:block lg:w-auto ${isMenuOpen ? 'block' : 'hidden'}`} id="navbar-solid-bg">
-                        <ul className="flex flex-col mt-4 rounded-lg text-lg font-semibold bg-gray-50 lg:flex-row lg:space-x-8 lg:mt-0 lg:border-0 lg:bg-transparent">
+                        <ul className="flex flex-col mt-4 cursor-pointer rounded-lg text-lg font-semibold bg-gray-50 lg:flex-row lg:space-x-8 lg:mt-0 lg:border-0 lg:bg-transparent">
                             <li>
-                                <NavLink to= ''>
+                                <NavLink to= '/admin/dashboard'>
                                     <p
                                         className="block py-2 pl-3 pr-4 lg:text-lg  bg rounded lg:bg-transparent lg:p-0 "
                                         aria-current="page">
@@ -68,6 +72,15 @@ const TopBar = () => {
                             </NavLink>
                             </li>
                             <li>
+                            <NavLink to= '/admin/categories'>
+                                    <p
+                                        className="block py-2 pl-3 pr-4 lg:text-lg  rounded lg:bg-transparent lg:p-0 "
+                                        aria-current="page">
+                                        Job Category
+                                    </p>
+                            </NavLink>
+                            </li>
+                            <li>
                             <NavLink to= '/admin/companies'>
                                     <p
                                         className="block py-2 pl-3 pr-4 lg:text-lg rounded lg:bg-transparent lg:p-0 "
@@ -77,7 +90,7 @@ const TopBar = () => {
                             </NavLink>
                             </li>
                             <li>
-                            <NavLink to= ''>
+                            <NavLink to= '/admin/posts'>
                                     <p
                                         className="block py-2 pl-3 pr-4 lg:text-lg rounded lg:bg-transparent lg:p-0 "
                                         aria-current="page">

@@ -1,30 +1,38 @@
 import React, { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react';
-import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../../../api/axiosInstance';
 import toast from 'react-hot-toast';
 
 interface PermissionBoxProps {
     visible : boolean;
     closeBox : () => void;
-    professionId : string;
-    setUserData : (userData: any) => void;
+    dataId : string;
+    type : 'education' | 'profession' | 'job' ;
+    setUpdateUI :(data: any) => void;
 }
 
-const PermissionBox: React.FC<PermissionBoxProps> = ({setUserData ,visible , closeBox, professionId}) => {
+const PermissionBox: React.FC<PermissionBoxProps> = ({ visible , setUpdateUI, closeBox, dataId , type}) => {
     const [open, setOpen] = useState(true);
 
     const cancelButtonRef = useRef(null);
 
-    const deleteProfession = () => {
-      console.log(professionId);
-      
-      axiosInstance.delete(`/delete_pro/${professionId}`)
+    let endPoint = '';
+
+    if(type === 'education'){
+      endPoint = `/delete_edu/${dataId}`
+    } else if(type === 'profession'){
+      endPoint = `/delete_pro/${dataId}`
+    } else if(type === 'job'){
+      endPoint = `/deletejob/${dataId}`
+    }
+
+    const deleteData = () => {
+      axiosInstance.delete(endPoint)
       .then((res) => {
         if(res.data.message){
           toast.success(res.data.message);
           closeBox();
-          setUserData(res.data.user);
+          setUpdateUI((prev : any) => !prev);
         }
 
         if(res.data.error){
@@ -33,6 +41,12 @@ const PermissionBox: React.FC<PermissionBoxProps> = ({setUserData ,visible , clo
       }).catch((err) => console.log(err , 'delete pro err')
       )
     }
+
+    const confirmationMessage = {
+      education: 'Are you sure you want to delete this education?',
+      profession: 'Are you sure you want to delete this profession?',
+      job: 'Are you sure you want to delete this job?',
+    };
 
   return (
     <>
@@ -74,7 +88,7 @@ const PermissionBox: React.FC<PermissionBoxProps> = ({setUserData ,visible , clo
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          Are you sure you want to delete this Profession? 
+                          {confirmationMessage[type]}
                         </p>
                       </div>
                     </div>
@@ -82,8 +96,8 @@ const PermissionBox: React.FC<PermissionBoxProps> = ({setUserData ,visible , clo
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
-                    type="button" onClick={deleteProfession}
-                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                    type="button" onClick={deleteData}
+                    className="inline-flex w-full justify-center rounded-md bg-[#e76e6e] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                   >
                     Delete
                   </button>

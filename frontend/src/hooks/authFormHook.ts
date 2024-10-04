@@ -1,4 +1,3 @@
-//frontend\src\hooks\authFormHook.ts
 import { useState } from "react"
 
 interface UserData {

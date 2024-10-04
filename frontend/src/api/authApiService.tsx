@@ -1,6 +1,4 @@
-//frontend\src\api\authApiService.tsx
-import { axiosInstance } from "./axiosInstance";
-import { AxiosError } from 'axios';
+import { axiosInstance } from "./axiosInstance"
 
 interface UserData {
     name: string;
@@ -12,34 +10,21 @@ interface UserData {
 
 
 export const signUp = async(userData: UserData , otp: string, isNotOtp: boolean) => {
-    try {
-        console.log('UserData:', userData);
-     let response ;
+    let response ;
 
-    if (isNotOtp) {
-        response = await axiosInstance.post('/auth/register', userData, 
-            { headers: { 'Content-Type': 'application/json' } });
+    if(isNotOtp) {
+        response = await axiosInstance.post('/auth/register' , {userData});
+
     } else {
-        response = await axiosInstance.post('/auth/verify-otp', { ...userData, otp });
+        response  = await axiosInstance.post('/auth/otpregister' , {userData , otp});
     }
     return response;
-    }catch (error) {
-        // Check if the error is an AxiosError
-        if (error instanceof AxiosError) {
-            console.error('Axios error:', error.response?.data || error.message);
-        } else if (error instanceof Error) {
-            console.error('Error:', error.message);
-        } else {
-            console.error('Unknown error', error);
-        }
-        throw error;
-    }}
+}
 
 
 
 export const login = async (userData: UserData) => {
-    const response = await axiosInstance.post('/auth/login' ,  userData, 
-        { headers: { 'Content-Type': 'application/json' } });
+    const response = await axiosInstance.post('/auth/login' , {userData});
     return response;
 }
 

@@ -2,50 +2,93 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { User } from '../../domain/entities/User';
 
-// Omit the 'id' property from User to avoid conflict with Mongoose's Document
-interface UserDocument extends Omit<User, 'id'>, Document {}
+// Create an intersection type of Mongoose Document and the User interface
+export interface UserDocument extends Document, Omit<User, 'id'> {
+  _id: string; // Mongoose's _id field, if required
+}
 
-const UserSchema: Schema = new Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    role: { type: String, required: true, default: 'User' },
-    password: { type: String, required: true },
-    isBlocked: { type: Boolean, default: false },
-    location: String,
-    headline: String,
-    skills: String,
-    profileImage: { type: String, default: 'https://cdn-icons-png.flaticon.com/512/6596/6596121.png' },
-    education: [
-        {
-            institute: String,
-            fieldOfStudy: String,
-            location: String,
-            from: Date,
-            to: Date
-        }
-    ],
-    profession: [
-        {
-            companyName: String,
-            location: String,
-            role: String
-        }
-    ],
-    resume: {
-        data: Buffer,
-        contentType: String
-    },
-    savedPosts: [
-        {
-            postId: { type: mongoose.Schema.Types.ObjectId, ref: 'Post' },
-            addedAt: { type: Date, default: Date.now }
-        }
-    ],
-
-    otp: { type: String },
-    otpExpires: { type: Date },
-
+const educationSchema = new Schema({
+  institute: { type: String },
+  fieldOfStudy: { type: String },
+  instituteLocation: { type: String }
 });
 
-// Export User model with UserDocument interface
-export const UserModel = mongoose.model<UserDocument>('User', UserSchema);
+const professionSchema = new Schema({
+  companyName: { type: String },
+  jobLocation: { type: String },
+  role: { type: String }
+});
+
+const resumeSchema = new Schema({
+  data: { type: Buffer },
+  contentType: { type: String }
+});
+
+const savedPostSchema = new Schema({
+  postId: { type: mongoose.Schema.Types.ObjectId, ref: 'posts' },
+  addedAt: { type: Date, default: Date.now }
+});
+
+const connectionRequestSchema = new Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
+});
+
+const followingCompanySchema = new Schema({
+  company: { type: mongoose.Schema.Types.ObjectId, ref: 'companies' }
+});
+
+const appliedJobSchema = new Schema({
+  jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'job openings' },
+  status: {
+    type: String,
+    enum: ['Pending', 'Accepted', 'Rejected'],
+    default: 'Pending'
+  },
+  appliedAt: { type: Date, default: Date.now }
+});
+
+const userSchema = new Schema<UserDocument>({
+  name: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (value: string) => /[a-zA-Z]/.test(value),
+      message: 'Invalid Name entry'
+    }
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    match: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+  },
+  phone: { type: Number },
+  role: {
+    type: String,
+    required: true,
+    enum: ['Candidate', 'Company']
+  },
+  password: { type: String, required: true },
+  isBlocked: { type: Boolean, default: false },
+  location: { type: String },
+  headline: { type: String },
+  skills: { type: String },
+  profileImage: {
+    type: String,
+    default: 'https://cdn-icons-png.flaticon.com/512/6596/6596121.png'
+  },
+  education: [educationSchema],
+  profession: [professionSchema],
+  resume: resumeSchema,
+  savedPosts: [savedPostSchema],
+  pendingRequests: [connectionRequestSchema],
+  manageRequests: [connectionRequestSchema],
+  connections: [connectionRequestSchema],
+  followingCompanies: [followingCompanySchema],
+  appliedJobs: [appliedJobSchema],
+  chatId: { type: mongoose.Schema.Types.ObjectId, ref: 'chats' },
+  createdOn: { type: Date, default: Date.now }
+});
+
+const userModel = mongoose.model<UserDocument>('users', userSchema);
+export default userModel;

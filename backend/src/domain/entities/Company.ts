@@ -3,14 +3,31 @@ export interface Company {
     id?: string;
     name: string;
     email: string;
+    phone: number;
+    role: 'Candidate' | 'Company';
     password: string;
-    role: 'Company';
+    isBlocked?: boolean;
+    verify?: boolean;
     location?: string;
-    industry?: string;
+    headline?: string;
     profileImage?: string;
-    isBlocked: boolean;
-    companySize?: number;
-    website?: string;
-    otp?: string;
-    otpExpires?: Date;
-}
+    savedPosts?: SavedPost[];
+    followers?: Follower[];
+    followingCompanies?: FollowingCompany[];
+    createdOn?: Date;
+  }
+  
+  export interface SavedPost {
+    postId: string;
+    addedAt?: Date;
+  }
+  
+  export interface Follower {
+    user?: string;
+    company?: string;
+  }
+  
+  export interface FollowingCompany {
+    company: string;
+  }
+  

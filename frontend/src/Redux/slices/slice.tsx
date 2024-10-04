@@ -1,10 +1,9 @@
-//frontend\src\Redux\slices\slice.tsx
 import { createSlice , PayloadAction  } from "@reduxjs/toolkit";
 
 //structure of user data
 export interface UserCred {
     name : string,
-    email : string,
+    useremail : string,
     role : string , 
     userId : string,
 }

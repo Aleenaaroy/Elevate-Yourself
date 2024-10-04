@@ -2,12 +2,16 @@ import {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { adminAxiosInstance } from '../../api/axiosInstance';
 import toast, { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { setAdminData } from '../../Redux/slices/adminSlice';
+import { Helmet } from 'react-helmet-async';
 
 const Adminlogin = () => {
     const [adminEmail , setAdminEmail] = useState<string>('');
     const [adminPassword , setAdminPassword] = useState<string>('');
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSubmit = (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -15,6 +19,7 @@ const Adminlogin = () => {
         adminAxiosInstance.post('/' , {email:adminEmail , password:adminPassword}).then((res) =>{
           
           if(res.data.message){
+            dispatch(setAdminData(res.data.adminData))
             localStorage.setItem('adminToken' , JSON.stringify(res.data.token));
             toast.success(res.data.message , {duration : 2000 , style : {color : '#fff' , background : 'black'}});
             setTimeout(() => {
@@ -31,6 +36,9 @@ const Adminlogin = () => {
 
   return (
     <>
+    <Helmet>
+      <title>Admin - Elevate</title>
+    </Helmet>
     <Toaster position='top-right'/>
     <div className=" border-solid flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -93,7 +101,7 @@ const Adminlogin = () => {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-light-blue-900 hover:bg-light-blue-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-blue px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Login
               </button>

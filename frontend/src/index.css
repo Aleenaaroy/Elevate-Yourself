@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 ::-webkit-scrollbar {
   display: none;
    -ms-overflow-style: none;  /* IE and Edge */
@@ -81,7 +80,7 @@ z-index: 49;
     --color-white: 255 255 255;
 
   }
-  /*//15 23 42  21 30 49*/
+  /* //15 23 42  21 30 49*/
   [data-theme="dark"] {
      --color-bg: 12 12 12;
      --color-primary: 31 31 31;
@@ -119,4 +118,35 @@ z-index: 49;
   border-top: 1px solid gray;
 }
 
+.login {
+  position: relative;
+}
 
+.login ::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(../public/land.jpg);
+  background-size: cover;
+  filter: blur(3px); /* Apply blur to the background image */
+  z-index: -1; /* Place the pseudo-element behind the content */
+}
+
+
+.notification-removing {
+  animation: slideOut 4s forwards ease-in-out;
+}
+
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}

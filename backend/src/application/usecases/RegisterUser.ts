@@ -1,8 +1,8 @@
 //backend\src\application\usecases\RegisterUser.ts
 import { User } from '../../domain/entities/User';
 import { Company } from '../../domain/entities/Company';
-import { IUserRepository } from '../../domain/repositories/IUserRepository';
-import { ICompanyRepository } from '../../domain/repositories/ICompanyRepository';
+import { IUserRepository } from '../../domain/repositories/interfaces/IUserRepository';
+import { ICompanyRepository } from '../../domain/repositories/interfaces/ICompanyRepository';
 import bcrypt from 'bcrypt';
 
 export class RegisterUserUseCase {
