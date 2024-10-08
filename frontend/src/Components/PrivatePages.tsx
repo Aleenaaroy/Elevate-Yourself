@@ -9,10 +9,10 @@ interface PrivatePagesProps {
 }
 
 const PrivatePages : React.FC<PrivatePagesProps> = ({isUser}) => {
-  
+  console.log(`isUser:${isUser}`);
     const user = useSelector((state : RootState) => state.user.userCred);
     const admin = useSelector((state : AdminRootState) => state.admin.adminData);
-
+    console.log(`user:${user}`);
     if(isUser){
       if(user){
         return <Outlet/>

@@ -2,9 +2,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { Company } from '../../domain/entities/Company';
 
-// Create an intersection type of Mongoose Document and the Company interface
 export interface CompanyDocument extends Document, Omit<Company, 'id'> {
-  _id: string; // Mongoose's _id field, if required
+  _id: string; 
 }
 
 const savedPostSchema = new Schema({

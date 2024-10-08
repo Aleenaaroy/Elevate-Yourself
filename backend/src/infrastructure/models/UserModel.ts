@@ -2,9 +2,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { User } from '../../domain/entities/User';
 
-// Create an intersection type of Mongoose Document and the User interface
 export interface UserDocument extends Document, Omit<User, 'id'> {
-  _id: string; // Mongoose's _id field, if required
+  _id: string; 
 }
 
 const educationSchema = new Schema({
