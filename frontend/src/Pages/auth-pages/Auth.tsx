@@ -1,3 +1,4 @@
+//frontend\src\Pages\auth-pages\Auth.tsx
 import React from 'react'
 import InputAuth from '../../Components/user/fields/InputAuth'
 import {Link, useNavigate} from 'react-router-dom'
@@ -62,16 +63,23 @@ const Auth: React.FC<AuthProps> = ({isLogin}) => {
                     dispatch(setUserInfo(response.data.userData));
                     const token = response.data.token;
                     localStorage.setItem('userToken', JSON.stringify(token));
-            
-                } else if(response.data.companyData){
+                    toast.success(response.data.message, { duration: 2000, style: { color: '#fff', background: 'black' } });
+
+                    // Redirect to user feed page after successful login
+                    setTimeout(() => {
+                        navigate('/feed');
+                    }, 3000);
+                } else if (response.data.companyData) {
                     dispatch(setUserInfo(response.data.companyData));
                     const token = response.data.token;
                     localStorage.setItem('userToken', JSON.stringify(token));
+                    toast.success(response.data.message, { duration: 2000, style: { color: '#fff', background: 'black' } });
+
+                    // Redirect to user feed page after successful login
+                    setTimeout(() => {
+                        navigate('/feed');
+                    }, 3000);
                 }
-                toast.success(response.data.message , {duration : 2000 , style : {color : '#fff' , background : 'black'}});
-                setTimeout(() => {
-                    navigate('/feed');
-                }, 3000);           
             }
         } catch (error) {
             return error;
@@ -225,7 +233,7 @@ const Auth: React.FC<AuthProps> = ({isLogin}) => {
                                             } else if(res.data.error){
                                                 toast.error(res.data.error);
                                             }
-                                        }).catch((err) => console.log(err , 'axio catch err g login')
+                                        }).catch((err) => console.log(err , 'axios catch err g login')
                                         )
                                     }
                                 } }
@@ -251,4 +259,4 @@ const Auth: React.FC<AuthProps> = ({isLogin}) => {
     )
 }
 
-export default Auth
+export default Auth;
