@@ -2,59 +2,75 @@
 import { ICompanyRepository } from './interfaces/ICompanyRepository';
 import companyModel, { CompanyDocument } from '../../infrastructure/models/CompanyModel';
 import { Company } from '../../domain/entities/Company';
+import mongoose from 'mongoose';
 
 export class CompanyRepository implements ICompanyRepository {
+  async findById(id: string): Promise<Company | null> {
+    if (!mongoose.Types.ObjectId.isValid(id)) return null;
+    const companyDoc = await companyModel.findById(id).exec();
+    return companyDoc ? this.toDomain(companyDoc) : null;
+  }
+
+  async findByEmail(email: string): Promise<Company | null> {
+    const companyDoc = await companyModel.findOne({ email }).exec();
+    return companyDoc ? this.toDomain(companyDoc) : null;
+  }
+
   async createCompany(company: Company): Promise<Company> {
-    const createdCompany = new companyModel(company);
-    await createdCompany.save();
-    return this.toDomain(createdCompany);
-  }
-
-  async findCompanyById(id: string): Promise<Company | null> {
-    const companyDocument = await companyModel.findById(id);
-    return companyDocument ? this.toDomain(companyDocument) : null;
-  }
-
-  async findCompanyByEmail(email: string): Promise<Company | null> {
-    const companyDocument = await companyModel.findOne({ email });
-    return companyDocument ? this.toDomain(companyDocument) : null;
-  }
-  async findCompanyByPhone(phone: number): Promise<Company | null> {
-    const companyDocument = await companyModel.findOne({ phone });
-    return companyDocument ? this.toDomain(companyDocument) : null;
+    const newCompany = new companyModel({
+      ...company,
+      _id: new mongoose.Types.ObjectId(), // Set a new ObjectId
+    });
+    const savedCompany = await newCompany.save();
+    return this.toDomain(savedCompany);
   }
 
   async updateCompany(id: string, company: Partial<Company>): Promise<Company | null> {
-    const updatedCompany = await companyModel.findByIdAndUpdate(id, company, { new: true });
+    if (!mongoose.Types.ObjectId.isValid(id)) return null;
+    const updatedCompany = await companyModel.findByIdAndUpdate(id, company, {
+      new: true,
+    }).exec();
     return updatedCompany ? this.toDomain(updatedCompany) : null;
   }
 
-  async deleteCompany(id: string): Promise<void> {
-    await companyModel.findByIdAndDelete(id);
+  async deleteCompany(id: string): Promise<boolean> {
+    if (!mongoose.Types.ObjectId.isValid(id)) return false;
+    const result = await companyModel.findByIdAndDelete(id).exec();
+    return result !== null;
+  }
+  async findByIdAndUpdate(id: string, updateData: Partial<Company>, options?: any): Promise<Company | null> {
+    const updatedCompany = await companyModel.findByIdAndUpdate(id, updateData, options);
+    return updatedCompany ? this.toDomain(updatedCompany) : null;
   }
 
-  async getAllCompanies(): Promise<Company[]> {
-    const companies = await companyModel.find();
-    return companies.map(company => this.toDomain(company));
+  async find(): Promise<Company[]> {  
+    const companies = await companyModel.find().exec();  // Use exec() for consistency
+    return companies.map(company => this.toDomain(company));  // Use toDomain for mapping
   }
 
-  private toDomain(companyDocument: CompanyDocument): Company {
+  async findAll(): Promise<Company[]> {
+    const companies = await companyModel.find().exec();  // Use exec() for consistency
+    return companies.map(company => this.toDomain(company));  // Use toDomain for mapping
+  }
+
+  // Helper function to map the MongoDB document to the Company domain entity
+  private toDomain(companyDoc: CompanyDocument): Company {
     return {
-      id: companyDocument._id.toString(),
-      name: companyDocument.name,
-      email: companyDocument.email,
-      phone: companyDocument.phone,
-      role: companyDocument.role,
-      password: companyDocument.password,
-      isBlocked: companyDocument.isBlocked,
-      verify: companyDocument.verify,
-      location: companyDocument.location,
-      headline: companyDocument.headline,
-      profileImage: companyDocument.profileImage,
-      savedPosts: companyDocument.savedPosts,
-      followers: companyDocument.followers,
-      followingCompanies: companyDocument.followingCompanies,
-      createdOn: companyDocument.createdOn
+      id: companyDoc._id.toString(),
+      name: companyDoc.name,
+      email: companyDoc.email,
+      phone: companyDoc.phone,
+      role: companyDoc.role,
+      password: companyDoc.password,
+      isBlocked: companyDoc.isBlocked,
+      verify: companyDoc.verify,
+      location: companyDoc.location,
+      headline: companyDoc.headline,
+      profileImage: companyDoc.profileImage,
+      savedPosts: companyDoc.savedPosts,
+      followers: companyDoc.followers,
+      followingCompanies: companyDoc.followingCompanies,
+      createdOn: companyDoc.createdOn,
     };
   }
 }

@@ -1,33 +1,26 @@
 // backend\src\domain\entities\Company.ts
 export interface Company {
-    id?: string;
-    name: string;
-    email: string;
-    phone: number;
-    role: 'Candidate' | 'Company';
-    password: string;
-    isBlocked?: boolean;
-    verify?: boolean;
-    location?: string;
-    headline?: string;
-    profileImage?: string;
-    savedPosts?: SavedPost[];
-    followers?: Follower[];
-    followingCompanies?: FollowingCompany[];
-    createdOn?: Date;
-  }
-  
-  export interface SavedPost {
+  id: string;
+  name: string;
+  email: string;
+  phone: number;
+  role: 'Company';
+  password: string;
+  isBlocked: boolean;
+  verify: boolean;
+  location?: string;
+  headline?: string;
+  profileImage?: string;
+  savedPosts?: Array<{
     postId: string;
     addedAt?: Date;
-  }
-  
-  export interface Follower {
+  }>;
+  followers?: Array<{
     user?: string;
     company?: string;
-  }
-  
-  export interface FollowingCompany {
+  }>;
+  followingCompanies?: Array<{
     company: string;
-  }
-  
+  }>;
+  createdOn: Date;
+}

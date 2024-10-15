@@ -1,11 +1,10 @@
-// src/domain/repositories/IAdminRepository.ts
+// backend\src\domain\repositories\interfaces\IAdminRepository.ts
 import { Admin } from '../../entities/Admin';
 
 export interface IAdminRepository {
-  createAdmin(admin: Admin): Promise<Admin>;
-  findAdminById(id: string): Promise<Admin | null>;
-  findAdminByEmail(email: string): Promise<Admin | null>;
-  updateAdmin(id: string, admin: Partial<Admin>): Promise<Admin | null>;
-  deleteAdmin(id: string): Promise<void>;
-  getAllAdmins(): Promise<Admin[]>;
+    create(admin: Admin): Promise<Admin>;
+    findById(id: string): Promise<Admin | null>;
+    findByEmail(email: string): Promise<Admin | null>;
+    update(id: string, admin: Partial<Admin>): Promise<Admin | null>;
+    delete(id: string): Promise<boolean>;
 }

@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { connectToDatabase } from "./src/infrastructure/config/dbConnection";
 import authRoutes from './src/infrastructure/routes/AuthRoutes';
+import adminRoutes from './src/infrastructure/routes/AdminRoutes';
 
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/admin', adminRoutes);
 
 connectToDatabase();
 const PORT = process.env.PORT || 5000;

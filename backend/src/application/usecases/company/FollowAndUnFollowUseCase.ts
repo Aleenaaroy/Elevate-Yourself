@@ -11,7 +11,7 @@ export class FollowAndUnfollowCompanyUseCase {
     }
 
     async execute(userId: string, companyId: string) {
-        const company = await this.companyRepository.findCompanyById(companyId);
+        const company = await this.companyRepository.findById(companyId);
         if (!company) {
             return { error: 'Company not found' };
         }

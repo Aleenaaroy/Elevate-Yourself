@@ -2,11 +2,10 @@
 import { User } from '../../entities/User';
 
 export interface IUserRepository {
+  findById(id: string): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;
   createUser(user: User): Promise<User>;
-  findUserById(id: string): Promise<User | null>;
-  findUserByEmail(email: string): Promise<User | null>;
-  findUserByPhone(phone: number): Promise<User | null>;
   updateUser(id: string, user: Partial<User>): Promise<User | null>;
-  deleteUser(id: string): Promise<void>;
-  getAllUsers(): Promise<User[]>;
+  deleteUser(id: string): Promise<boolean>;
+  find(): Promise<User[]>;
 }

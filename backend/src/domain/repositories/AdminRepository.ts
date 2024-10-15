@@ -1,45 +1,48 @@
-// src/infrastructure/repositories/AdminRepository.ts
+// backend\src\domain\repositories\AdminRepository.ts
 import { IAdminRepository } from './interfaces/IAdminRepository';
-import adminModel, { AdminDocument } from '../../infrastructure/models/AdminModel';
+import AdminModel,{ AdminDocument } from '../../infrastructure/models/AdminModel';
 import { Admin } from '../../domain/entities/Admin';
 
 export class AdminRepository implements IAdminRepository {
-  async createAdmin(admin: Admin): Promise<Admin> {
-    const createdAdmin = new adminModel(admin);
-    await createdAdmin.save();
-    return this.toDomain(createdAdmin);
-  }
+    
+    // Create a new Admin
+    async create(admin: Admin): Promise<Admin> {
+        const newAdmin = new AdminModel(admin);
+        const savedAdmin = await newAdmin.save();
+        return this.mapDocumentToEntity(savedAdmin);
+    }
 
-  async findAdminById(id: string): Promise<Admin | null> {
-    const adminDocument = await adminModel.findById(id);
-    return adminDocument ? this.toDomain(adminDocument) : null;
-  }
+    // Find an Admin by ID
+    async findById(id: string): Promise<Admin | null> {
+        const adminDocument = await AdminModel.findById(id).exec();
+        return adminDocument ? this.mapDocumentToEntity(adminDocument) : null;
+    }
 
-  async findAdminByEmail(email: string): Promise<Admin | null> {
-    const adminDocument = await adminModel.findOne({ email });
-    return adminDocument ? this.toDomain(adminDocument) : null;
-  }
+    // Find an Admin by email
+    async findByEmail(email: string): Promise<Admin | null> {
+        const adminDocument = await AdminModel.findOne({ email }).exec();
+        return adminDocument ? this.mapDocumentToEntity(adminDocument) : null;
+    }
 
-  async updateAdmin(id: string, admin: Partial<Admin>): Promise<Admin | null> {
-    const updatedAdmin = await adminModel.findByIdAndUpdate(id, admin, { new: true });
-    return updatedAdmin ? this.toDomain(updatedAdmin) : null;
-  }
+    // Update an Admin by ID
+    async update(id: string, admin: Partial<Admin>): Promise<Admin | null> {
+        const updatedAdmin = await AdminModel.findByIdAndUpdate(id, admin, { new: true }).exec();
+        return updatedAdmin ? this.mapDocumentToEntity(updatedAdmin) : null;
+    }
 
-  async deleteAdmin(id: string): Promise<void> {
-    await adminModel.findByIdAndDelete(id);
-  }
+    // Delete an Admin by ID
+    async delete(id: string): Promise<boolean> {
+        const result = await AdminModel.findByIdAndDelete(id).exec();
+        return !!result;
+    }
 
-  async getAllAdmins(): Promise<Admin[]> {
-    const admins = await adminModel.find();
-    return admins.map(admin => this.toDomain(admin));
-  }
-
-  private toDomain(adminDocument: AdminDocument): Admin {
-    return {
-      id: adminDocument._id.toString(),
-      name: adminDocument.name,
-      email: adminDocument.email,
-      password: adminDocument.password
-    };
-  }
+    // Utility method to map Mongoose Document to the Admin entity
+    private mapDocumentToEntity(adminDocument: AdminDocument): Admin {
+        return {
+            id: adminDocument._id.toString(),
+            name: adminDocument.name,
+            email: adminDocument.email,
+            password: adminDocument.password,
+        };
+    }
 }

@@ -1,9 +1,9 @@
-//backend\src\infrastructure\models\UserModel.ts
+// backend\src\infrastructure\models\UserModel.ts
 import mongoose, { Schema, Document } from 'mongoose';
 import { User } from '../../domain/entities/User';
 
 export interface UserDocument extends Document, Omit<User, 'id'> {
-  _id: string; 
+  _id: string;
 }
 
 const educationSchema = new Schema({

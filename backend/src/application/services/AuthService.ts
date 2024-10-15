@@ -7,7 +7,7 @@ export class AuthService {
     constructor(private userRepository: IUserRepository) {}
 
     async login(email: string, password: string): Promise<string> {
-        const user = await this.userRepository.findUserByEmail(email);
+        const user = await this.userRepository.findByEmail(email);
         if (!user) {
             throw new Error('Invalid credentials');
         }

@@ -20,12 +20,11 @@ export class AuthUseCases {
   async register(userData: Partial<User>): Promise<string> {
     const { name, email, phone, role, password } = userData;
 
-    const existingUser = await this.userRepository.findUserByEmail(email!);
-    const existingCompany = await this.companyRepository.findCompanyByEmail(email!);
-    const existingMobile = await this.userRepository.findUserByPhone(phone!) ||
-      await this.companyRepository.findCompanyByPhone(phone!);
+    const existingUser = await this.userRepository.findByEmail(email!);
+    const existingCompany = await this.companyRepository.findByEmail(email!);
+  
 
-    if (existingUser || existingCompany || existingMobile) {
+    if (existingUser || existingCompany ) {
       throw new Error('Account already exists');
     }
 
@@ -72,10 +71,10 @@ export class AuthUseCases {
   }
 
   async login(email: string, password: string): Promise<string> {
-    const user = await this.userRepository.findUserByEmail(email);
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      const company = await this.companyRepository.findCompanyByEmail(email);
+      const company = await this.companyRepository.findByEmail(email);
       if (!company) {
         throw new Error('Account does not exist');
       }
@@ -105,7 +104,7 @@ export class AuthUseCases {
   }
 
   async googleSignup(name: string, email: string, profileImage: string, googleId: string): Promise<User> {
-    const existingUser = await this.userRepository.findUserByEmail(email);
+    const existingUser = await this.userRepository.findByEmail(email);
 
     if (existingUser) {
       throw new Error('User Already Exists');
@@ -117,13 +116,14 @@ export class AuthUseCases {
       profileImage,
       password: googleId,
       role: 'Candidate',
+      
     };
 
     return this.userRepository.createUser(newUser);
   }
 
   async googleLogin(email: string): Promise<{ token: string, user: User }> {
-    const user = await this.userRepository.findUserByEmail(email);
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
       throw new Error('User not found');

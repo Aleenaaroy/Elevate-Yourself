@@ -8,7 +8,7 @@ export class ListCompaniesUseCase {
     }
 
     async execute() {
-        const companies = await this.companyRepository.getAllCompanies();
+        const companies = await this.companyRepository.findAll();
         return { companies };
     }
 }

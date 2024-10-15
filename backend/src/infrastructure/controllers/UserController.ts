@@ -1,146 +1,88 @@
 import { Request, Response, NextFunction } from 'express';
-import { OwnProfileUseCase } from '../../application/usecases/user/OwnProfileUsecase';
-import { GetProfileUseCase } from '../../application/usecases/user/GetProfileUseCase';
-import { ListAllUsersUseCase } from '../../application/usecases/user/ListAllUsersUseCase';
-import { ListCompaniesUseCase } from '../../application/usecases/company/ListCompaniesUseCase';
-import { SendConnectionRequestUseCase } from '../../application/usecases/user/SendConnectionRequestUseCase';
-import { AcceptConnectionRequestUseCase } from '../../application/usecases/user/AcceptConnectionRequestUseCase';
-import { RejectConnectionRequestUseCase } from '../../application/usecases/user/RejectConnectionRequestUseCase';
-import { FollowAndUnfollowCompanyUseCase } from '../../application/usecases/company/FollowAndUnFollowUseCase';
-import { IUserRepository } from '../../domain/repositories/interfaces/IUserRepository';
-import { ICompanyRepository } from '../../domain/repositories/interfaces/ICompanyRepository';
+import { createUser } from '../../application/usecases/user/createUser';
+import { getUser } from '../../application/usecases/user/getUser';
+import { updateUser } from '../../application/usecases/user/updateUser';
+import { deleteUser } from '../../application/usecases/user/deleteUser';
+import { addEducation, removeEducation } from '../../application/usecases/user/manageEducation';
+import { addProfession, removeProfession } from '../../application/usecases/user/manageProfession';
 
-export class UserController {
-  private ownProfileUseCase: OwnProfileUseCase;
-  private getProfileUseCase: GetProfileUseCase;
-  private listAllUsersUseCase: ListAllUsersUseCase;
-  private listCompaniesUseCase: ListCompaniesUseCase;
-  private sendConnectionRequestUseCase: SendConnectionRequestUseCase;
-  private acceptConnectionRequestUseCase: AcceptConnectionRequestUseCase;
-  private rejectConnectionRequestUseCase: RejectConnectionRequestUseCase;
-  private followAndUnfollowCompanyUseCase: FollowAndUnfollowCompanyUseCase;
 
-  constructor(userRepo: IUserRepository, companyRepo: ICompanyRepository) {
-    this.ownProfileUseCase = new OwnProfileUseCase(userRepo);
-    this.getProfileUseCase = new GetProfileUseCase(userRepo);
-    this.listAllUsersUseCase = new ListAllUsersUseCase(userRepo);
-    this.listCompaniesUseCase = new ListCompaniesUseCase(companyRepo);
-    this.sendConnectionRequestUseCase = new SendConnectionRequestUseCase(userRepo);
-    this.acceptConnectionRequestUseCase = new AcceptConnectionRequestUseCase(userRepo);
-    this.rejectConnectionRequestUseCase = new RejectConnectionRequestUseCase(userRepo);
-    this.followAndUnfollowCompanyUseCase = new FollowAndUnfollowCompanyUseCase(userRepo, companyRepo);
-  }
-
-  // Own profile (User or Company)
-  async ownProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+// Create a new user
+export const createUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?._id; // Assuming user middleware adds this
-      const result = await this.ownProfileUseCase.execute(userId);
-      if (result.error) {
-        return res.status(400).json({ error: result.error });
-      }
-      res.status(200).json({ message: 'Success', user: result.user });
+        const user = await createUser(req.body);
+        res.status(201).json({ message: 'User created successfully', user });
     } catch (error) {
-      next(error);
+        next(error);
     }
-  }
+};
 
-  // Get specific profile (User or Company)
-  async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+// Get a user by ID
+export const getUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.params;
-      const result = await this.getProfileUseCase.execute(id);
-      if (result.error) {
-        return res.status(400).json({ error: result.error });
-      }
-      res.status(200).json({ message: 'Success', user: result.user });
+        const user = await getUser(req.params.userId);
+        res.status(200).json({ user });
     } catch (error) {
-      next(error);
+        next(error);
     }
-  }
+};
 
-  // List all users except the logged-in one
-  async listAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
+// Update a user by ID
+export const updateUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?._id;
-      const result = await this.listAllUsersUseCase.execute(userId);
-      if (!result.users || result.users.length === 0) {
-        return res.status(400).json({ error: 'No users found' });
-      }
-      res.status(200).json({ message: 'Success', users: result.users });
+        const user = await updateUser(req.params.userId, req.body);
+        res.status(200).json({ message: 'User updated successfully', user });
     } catch (error) {
-      next(error);
+        next(error);
     }
-  }
+};
 
-  // List all companies except the logged-in user
-  async listCompanies(req: Request, res: Response, next: NextFunction): Promise<void> {
+// Delete a user by ID
+export const deleteUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?._id;
-      const result = await this.listCompaniesUseCase.execute(userId);
-      if (!result.companies || result.companies.length === 0) {
-        return res.status(400).json({ error: 'No companies found' });
-      }
-      res.status(200).json({ message: 'Success', companies: result.companies });
+        await deleteUser(req.params.userId);
+        res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
-      next(error);
+        next(error);
     }
-  }
+};
 
-  // Send a connection request to another user
-  async sendConnectionRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+// Add education to a user
+export const addEducationController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const targetUserId = req.params.userId;
-      const userId = req.user?._id;
-      const result = await this.sendConnectionRequestUseCase.execute(userId, targetUserId);
-      if (result.error) {
-        return res.status(400).json({ error: result.error });
-      }
-      res.status(200).json({ message: result.message });
+        await addEducation(req.params.userId, req.body);
+        res.status(200).json({ message: 'Education added successfully' });
     } catch (error) {
-      next(error);
+        next(error);
     }
-  }
+};
 
-  // Accept a connection request
-  async acceptConnectionRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+// Remove education from a user
+export const removeEducationController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const requestId = req.params.userId;
-      const userId = req.user?._id;
-      const result = await this.acceptConnectionRequestUseCase.execute(userId, requestId);
-      if (result.error) {
-        return res.status(400).json({ error: result.error });
-      }
-      res.status(200).json({ message: 'Request Accepted' });
+        await removeEducation(req.params.userId, req.params.educationId);
+        res.status(200).json({ message: 'Education removed successfully' });
     } catch (error) {
-      next(error);
+        next(error);
     }
-  }
+};
 
-  // Reject a connection request
-  async rejectConnectionRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+// Add profession to a user
+export const addProfessionController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const requestId = req.params.userId;
-      const userId = req.user?._id;
-      const result = await this.rejectConnectionRequestUseCase.execute(userId, requestId);
-      if (result.error) {
-        return res.status(400).json({ error: result.error });
-      }
-      res.status(200).json({ message: 'Connection request removed' });
+        await addProfession(req.params.userId, req.body);
+        res.status(200).json({ message: 'Profession added successfully' });
     } catch (error) {
-      next(error);
+        next(error);
     }
-  }
+};
 
-  // Follow or unfollow a company
-  async followAndUnfollowCompany(req: Request, res: Response, next: NextFunction): Promise<void> {
+// Remove profession from a user
+export const removeProfessionController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const companyId = req.params.companyId;
-      const userId = req.user?._id;
-      const result = await this.followAndUnfollowCompanyUseCase.execute(userId, companyId);
-      res.status(200).json({ message: result.message });
+        await removeProfession(req.params.userId, req.params.professionId);
+        res.status(200).json({ message: 'Profession removed successfully' });
     } catch (error) {
-      next(error);
+        next(error);
     }
-  }
-}
+};
