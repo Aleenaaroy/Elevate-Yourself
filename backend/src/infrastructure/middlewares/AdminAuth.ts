@@ -3,10 +3,14 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import AdminModel from '../models/AdminModel'; 
 
-export const verifyAdmin = async (req: Request, res: Response, next: NextFunction) => {
-    try { 
-        let token = req.header('authorization')?.split(' ')[1];
+interface AdminRequest extends Request {
+    admin?: any; 
+}
 
+export const verifyAdmin = async (req: AdminRequest, res: Response, next: NextFunction) => {
+    try { console.log(`req :${req.header('authorization')}`);
+        let token = req.header('authorization')?.split(' ')[1];
+console.log(token);
         if (!token) {         
             return res.status(401).json({ message: 'Unauthorized! No token found' });
         }
