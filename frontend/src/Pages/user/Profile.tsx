@@ -163,9 +163,6 @@ const Profile = () => {
               <PostCards setUpdateUI={setUpdateUI} userData={userData} showAllposts={false} posts={posts} />
 
             </div>
-
-            {/* right */}
-              {/* User Profession /  */}
               {user?.role === 'Candidate' ? (
                 <div className="hidden w-1/4 h-full lg:flex flex-col gap-8 overflow-y-auto">
                   <div className="w-full bg-primary shadow-sm rounded-lg px-6 py-5">

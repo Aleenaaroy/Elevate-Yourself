@@ -12,15 +12,13 @@ export class AdminLoginUseCase {
 
     async execute(email: string, password: string): Promise<{ message?: string, token?: string, error?: string, adminData?: Partial<Admin> }> {
         const admin = await this.adminRepository.findByEmail(email);
-        console.log(admin);//test
-        console.log(`admin pass:${admin?.password}`);
-        console.log(`pass:${password}`);
+        
         if (!admin || admin.password !== password) {
             return { error: 'Admin not found' };
         }
 
         const token = jwt.sign({ adminId: admin.id, adminEmail: admin.email }, process.env.JWT_SECRET || '', { expiresIn: '1h' });
-        console.log(token);//test
+        
         return {
             message: 'Login Successful',
             token,
