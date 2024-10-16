@@ -1,8 +1,8 @@
 import { createSlice , PayloadAction } from "@reduxjs/toolkit";
 
 export interface AdminData {
-    email : String;
-    adminId : String;
+    email : string;
+    adminId : string;
 }
 
 export interface AdminState {
